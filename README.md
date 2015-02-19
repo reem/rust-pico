@@ -1,6 +1,12 @@
 # pico
 
-> Nonblocking parsing support for hyper using picohttpparser.
+> Nonblocking asynchronous push-parser for HTTP powered by picohttpparser.
+
+## Overview
+
+Implement the Chunks trait for your data source, then use either
+`RequestParser` or `ResponseParser` to painlessly parse your data
+as an HTTP request or response.
 
 ## Usage
 
