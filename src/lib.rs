@@ -4,11 +4,10 @@
 
 //! # pico
 //!
-//! Nonblocking parsing support for hyper using picohttpparser.
+//! Nonblocking parsing support using picohttpparser.
 //!
 
 extern crate "pico-sys" as sys;
-extern crate hyper;
 extern crate libc;
 
 trait ChunkReader<C> {

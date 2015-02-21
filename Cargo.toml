@@ -10,5 +10,3 @@ license = "MIT"
 
 [dependencies]
 pico-sys = "*"
-hyper = "*"
-
