@@ -47,6 +47,7 @@ fn test_request_parse() {
             assert_eq!(s(r.method.0), "GET");
             assert_eq!(s(r.headers.0[0].0), "Host");
             assert_eq!(s(r.headers.0[0].1), "example.com");
+            assert_eq!(s(r.raw), "GET /hoge HTTP/1.1\r\nHost: example.com\r\nCookie: \r\n\r\n");
         }
     );
 }
@@ -66,6 +67,7 @@ fn test_response_parse() {
             assert_eq!(s(r.reason), "OK");
             assert_eq!(s(r.headers.0[0].0), "Content-Length");
             assert_eq!(s(r.headers.0[0].1), "14");
+            assert_eq!(s(r.raw), "HTTP/1.1 200 OK\r\nContent-Length: 14\r\n\r\n");
         }
     );
 }

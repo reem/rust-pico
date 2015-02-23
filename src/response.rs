@@ -11,7 +11,7 @@ pub struct Response<'s: 'h, 'h> {
     pub status: Status,
     pub headers: Headers<'s, 'h>,
     pub reason: &'s [u8],
-    pub raw: &'s [u8]
+    pub raw: &'s [u8],
 }
 
 #[derive(Debug)]
@@ -86,7 +86,7 @@ impl<'s, 'h> ResponseParser<'s, 'h> {
                         status: Status(self.status as u16),
                         headers: Headers(self.headers),
                         reason: self.reason,
-                        raw: self.read
+                        raw: &(&self.read)[..x as usize],
                     };
 
                     cb(Ok(req), chunks)

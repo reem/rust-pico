@@ -89,7 +89,7 @@ impl<'s, 'h> RequestParser<'s, 'h> {
                         method: self.method,
                         path: self.path,
                         headers: Headers(self.headers),
-                        raw: self.read
+                        raw: &(&self.read)[..x as usize],
                     };
 
                     cb(Ok(req), chunks)
