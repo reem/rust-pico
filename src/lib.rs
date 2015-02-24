@@ -23,7 +23,7 @@ pub trait Chunks {
 
 #[derive(Copy, Debug)]
 #[repr(C)]
-pub struct Headers<'s: 'h, 'h>(&'h [Header<'s>]);
+pub struct Headers<'s: 'h, 'h>(pub &'h [Header<'s>]);
 
 #[derive(Copy, Debug)]
 #[repr(C)]

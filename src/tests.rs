@@ -45,6 +45,8 @@ fn test_request_parse() {
             assert_eq!(r.version, Version(1, 1));
             assert_eq!(s(r.path.0), "/hoge");
             assert_eq!(s(r.method.0), "GET");
+            assert_eq!(s(r.headers.0[0].0), "Host");
+            assert_eq!(s(r.headers.0[0].1), "example.com");
         }
     );
 }
@@ -62,6 +64,8 @@ fn test_response_parse() {
             assert_eq!(r.version, Version(1, 1));
             assert_eq!(r.status.0, 200);
             assert_eq!(s(r.reason), "OK");
+            assert_eq!(s(r.headers.0[0].0), "Content-Length");
+            assert_eq!(s(r.headers.0[0].1), "14");
         }
     );
 }
