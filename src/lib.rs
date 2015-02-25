@@ -10,7 +10,7 @@
 extern crate "pico-sys" as sys;
 extern crate libc;
 
-trait ChunkReader<C> {
+pub trait ChunkReader<C> {
     fn read(self, &mut [u8]) -> (Option<usize>, C);
 }
 
