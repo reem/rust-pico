@@ -47,16 +47,16 @@ impl<'s, 'h> ResponseParser<'s, 'h> {
     }
 
     pub fn parse<C: Chunks, F>(mut self, chunks: C, cb: F)
-    where F: FnOnce(Result<Response<'s, 'h>, ResponseParserError>, C) {
+    where F: FnOnce(Result<Response<'s, 'h>, ResponseParserError>, C, &'s [u8]) {
         if self.unread.len() == 0 {
-            return cb(Err(ResponseParserError::TooLong), chunks);
+            return cb(Err(ResponseParserError::TooLong), chunks, self.read);
         }
 
         chunks.chunk(move |reader| {
             let (mayberead, chunks) = reader.read(self.unread);
             let read = match mayberead {
                 Some(read) => read,
-                None => return cb(Err(ResponseParserError::IncompleteResponse), chunks)
+                None => return cb(Err(ResponseParserError::IncompleteResponse), chunks, self.read)
             };
             self.unread = &mut mem::replace(&mut self.unread, &mut [])[read..];
             unsafe { *slice_to_mut_pair(&mut self.read).1 += read; }
@@ -88,14 +88,13 @@ impl<'s, 'h> ResponseParser<'s, 'h> {
                         reason: self.reason,
                         raw: &(&self.read)[..x as usize],
                     };
-
-                    cb(Ok(req), chunks)
+                    cb(Ok(req), chunks, &(&self.read)[x as usize..])
                 },
 
                 // Parse Error
                 -1 => {
                     println!("Parse error on {:?}", self.read);
-                    cb(Err(ResponseParserError::ParseError), chunks)
+                    cb(Err(ResponseParserError::ParseError), chunks, self.read)
                 },
 
                 // Incomplete, continue
