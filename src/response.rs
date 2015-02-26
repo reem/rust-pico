@@ -7,13 +7,23 @@ use {Status, Header, Headers, Version, Chunks, ChunkReader};
 /// A parsed Response, borrowing a ResponseParser.
 #[derive(Debug)]
 pub struct Response<'s: 'h, 'h> {
+    /// The response HTTP version.
     pub version: Version,
+
+    /// The response HTTP status.
     pub status: Status,
+
+    /// The response HTTP headers.
     pub headers: Headers<'s, 'h>,
+
+    /// The reason phrase of this response.
     pub reason: &'s [u8],
+
+    /// The raw representation of this response as bytes, not including the body.
     pub raw: &'s [u8],
 }
 
+/// A parser for a Response
 #[derive(Debug)]
 pub struct ResponseParser<'s: 'h, 'h> {
     read: &'s [u8],
@@ -24,14 +34,24 @@ pub struct ResponseParser<'s: 'h, 'h> {
     version: c_int
 }
 
+/// An error from a ResponseParser.
 #[derive(Debug, PartialEq, Copy)]
 pub enum ResponseParserError {
+    /// There was an error parsing the response.
     ParseError,
+
+    /// The response did not fit in the provided stream buffer.
     TooLong,
+
+    /// The chunks did not contain a full response.
     IncompleteResponse
 }
 
 impl<'s, 'h> ResponseParser<'s, 'h> {
+    /// Create a new parser using stream and headers as work space.
+    ///
+    /// Data from chunks will be read into stream and headers will be used
+    /// in the final Response's `Headers`.
     pub fn new(stream: &'s mut [u8], headers: &'h mut [Header<'s>]) -> ResponseParser<'s, 'h> {
         let stream_start = stream.as_ptr();
         let read: &'s [u8] =
@@ -46,6 +66,7 @@ impl<'s, 'h> ResponseParser<'s, 'h> {
         }
     }
 
+    /// Parse a Response from some data in the form of Chunks.
     pub fn parse<C: Chunks, F>(mut self, chunks: C, cb: F)
     where F: FnOnce(Result<Response<'s, 'h>, ResponseParserError>, C, &'s [u8]) {
         if self.unread.len() == 0 {
@@ -86,9 +107,9 @@ impl<'s, 'h> ResponseParser<'s, 'h> {
                         status: Status(self.status as u16),
                         headers: Headers(self.headers),
                         reason: self.reason,
-                        raw: &(&self.read)[..x as usize],
+                        raw: &self.read[..x as usize],
                     };
-                    cb(Ok(req), chunks, &(&self.read)[x as usize..])
+                    cb(Ok(req), chunks, &self.read[x as usize..])
                 },
 
                 // Parse Error

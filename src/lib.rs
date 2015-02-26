@@ -1,5 +1,5 @@
 #![feature(core, libc)]
-// #![deny(missing_docs)]
+#![deny(missing_docs)]
 #![cfg_attr(test, deny(warnings))]
 
 //! # pico
@@ -10,20 +10,26 @@
 extern crate "pico-sys" as sys;
 extern crate libc;
 
+/// A recursive reader which can read a single chunk into a buffer.
 pub trait ChunkReader<C> {
+    /// Retrieve the chunk and potentially the rest of the data.
     fn read(self, &mut [u8]) -> (Option<usize>, C);
 }
 
+/// A recursive list of chunks of bytes, available one chunk at a time.
 pub trait Chunks {
     type Reader: ChunkReader<Self>;
 
+    /// Request a single chunk, as a reader.
     fn chunk<F>(self, F) where F: FnOnce(Self::Reader);
 }
 
+/// The HTTP headers
 #[derive(Copy, Debug)]
 #[repr(C)]
 pub struct Headers<'s: 'h, 'h>(pub &'h [Header<'s>]);
 
+/// A single HTTP header field and value pair.
 #[derive(Copy, Debug)]
 #[repr(C)]
 pub struct Header<'s>(pub &'s [u8], pub &'s [u8]);
@@ -51,8 +57,12 @@ pub struct Status(pub u16);
 #[repr(C)]
 pub struct Version(pub u8, pub u8);
 
+/// HTTP Request Parsing Utilities.
 pub mod request;
+
+/// HTTP Response Parsing Utilities.
 pub mod response;
+
 mod common;
 
 #[cfg(test)]
