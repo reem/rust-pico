@@ -7,7 +7,7 @@
 //! Nonblocking parsing support using picohttpparser.
 //!
 
-extern crate "pico-sys" as sys;
+extern crate pico_sys as sys;
 extern crate libc;
 
 /// A recursive reader which can read a single chunk into a buffer.
@@ -18,6 +18,10 @@ pub trait ChunkReader<C> {
 
 /// A recursive list of chunks of bytes, available one chunk at a time.
 pub trait Chunks {
+    /// The "proof" that a read is ready and won't block.
+    ///
+    /// This is actually used to do the reading through the `read` method
+    /// on ChunkReader.
     type Reader: ChunkReader<Self>;
 
     /// Request a single chunk, as a reader.

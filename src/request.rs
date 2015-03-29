@@ -68,6 +68,7 @@ impl<'s, 'h> RequestParser<'s, 'h> {
     }
 
     /// Parse a Request from some data in the form of Chunks.
+    #[allow(trivial_casts)]
     pub fn parse<C: Chunks, F>(mut self, chunks: C, cb: F)
     where F: FnOnce(Result<Request<'s, 'h>, RequestParserError>, C, &'s [u8]) {
         if self.unread.len() == 0 {

@@ -67,6 +67,7 @@ impl<'s, 'h> ResponseParser<'s, 'h> {
     }
 
     /// Parse a Response from some data in the form of Chunks.
+    #[allow(trivial_casts)]
     pub fn parse<C: Chunks, F>(mut self, chunks: C, cb: F)
     where F: FnOnce(Result<Response<'s, 'h>, ResponseParserError>, C, &'s [u8]) {
         if self.unread.len() == 0 {
