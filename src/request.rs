@@ -36,7 +36,7 @@ pub struct RequestParser<'s: 'h, 'h> {
 }
 
 /// An error from a RequestParser
-#[derive(Debug, PartialEq, Copy)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum RequestParserError {
     /// There was an error parsing the request.
     ParseError,
