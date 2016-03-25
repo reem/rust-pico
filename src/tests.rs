@@ -5,7 +5,7 @@ use response::ResponseParser;
 use std::slice::bytes;
 use std::str;
 
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 struct DataReader {
     data: &'static [u8],
     num_reads: usize,
@@ -22,7 +22,7 @@ impl ChunkReader<DataReader> for DataReader {
         if self.num_reads == 0 {
             (None, self)
         } else {
-            bytes::copy_memory(into, self.data);
+            bytes::copy_memory(self.data, into);
             (Some(self.data.len()), DataReader{data: self.data, num_reads: self.num_reads - 1})
         }
     }

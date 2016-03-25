@@ -29,12 +29,12 @@ pub trait Chunks {
 }
 
 /// The HTTP headers
-#[derive(Copy, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(C)]
 pub struct Headers<'s: 'h, 'h>(pub &'h [Header<'s>]);
 
 /// A single HTTP header field and value pair.
-#[derive(Copy, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(C)]
 pub struct Header<'s>(pub &'s [u8], pub &'s [u8]);
 
@@ -42,22 +42,22 @@ pub struct Header<'s>(pub &'s [u8], pub &'s [u8]);
 pub const HEADER_EMPTY: Header<'static> = Header(&[], &[]);
 
 /// The HTTP method.
-#[derive(Copy, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(C)]
 pub struct Method<'s>(pub &'s [u8]);
 
 /// The HTTP request path.
-#[derive(Copy, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(C)]
 pub struct Path<'s>(pub &'s [u8]);
 
 /// The HTTP status code.
-#[derive(Copy, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(C)]
 pub struct Status(pub u16);
 
 /// The HTTP version.
-#[derive(Copy, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 #[repr(C)]
 pub struct Version(pub u8, pub u8);
 
